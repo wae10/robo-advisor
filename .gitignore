@@ -1,6 +1,7 @@
 # .gitignore file
-#always do .DS_Store on Macs, because they randomly show up
+# always do .DS_Store on Macs, because they randomly show up
 
 .DS_Store 
 
 .env
+
