@@ -1,3 +1,5 @@
+#TODO: 52 week high and low
+
 # app/robo_advisor.py
 import requests
 import json
@@ -27,22 +29,28 @@ API_KEY = os.getenv("ALPHAVANTAGE_API_KEY", default="OOPS")
 # empty list for multiple stocks
 stocks = []
 
-stock_num = input("Welcome to the robo-advisor!\nHow many stocks would you like to test?")
+stock_num = input("\nWelcome to the robo-advisor!\n\nHow many stocks would you like to evaluate?\n\n***> Disclaimer: you may only enter 5 stocks per request <***")
 
-if eval(stock_num) == 0:
+
+
+if stock_num == '0':
     print("You must enter a number higher than 0. Please try again.")
 
 elif num_there(stock_num):
 
     if stock_num.isnumeric(): #still need to fix for input like ad34
         stock_num = eval(stock_num)
-        for i in range(1, stock_num + 1):
-            symbol = input("Please enter your desired stock symbol #" + str(i) + ":\n")
-            if len(symbol) > 5 or num_there(symbol):
-                print("Invalid symbol. Input will be discarded.")
-            else:
-                stocks.append(symbol)
-        print(stocks)
+        if stock_num > 5:
+            print("You must enter less than 5 stocks.")
+
+        else:
+            for i in range(1, stock_num + 1):
+                symbol = input("Please enter your desired stock symbol #" + str(i) + ":\n")
+                if len(symbol) > 5 or num_there(symbol):
+                    print("Invalid symbol. Input will be discarded.")
+                else:
+                    stocks.append(symbol)
+            print(stocks)
     else:
         print("Invalid symbol. Restarting program...")
 
@@ -51,7 +59,7 @@ else:
 
 for symbol in stocks:
 
-    request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={API_KEY}"
+    request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol={symbol}&apikey={API_KEY}" # change to weekly
 
     response = requests.get(request_url)
 
@@ -59,26 +67,25 @@ for symbol in stocks:
 
     last_refresed = parsed_response["Meta Data"]["3. Last Refreshed"]
 
-    tsd = parsed_response["Time Series (Daily)"]
+    wts = parsed_response["Weekly Time Series"]
 
-    dates = list(tsd.keys())
+    dates = list(wts.keys())
 
     latest_day = dates[0]
 
-    latest_close = tsd[latest_day]["4. close"]
+    latest_close = wts[latest_day]["4. close"]
 
     high_prices = []
     low_prices = [] 
     closes = []
 
-    for date in dates:
-        high_price = tsd[date]["2. high"]
-        low_price = tsd[date]["3. low"]
-        close = tsd[date]["4. close"]
+    for date in dates[0:52]: #0-52 for the 52 week time stamp
+        high_price = wts[date]["2. high"]
+        low_price = wts[date]["3. low"]
+        close = wts[date]["4. close"]
         high_prices.append(float(high_price))
         low_prices.append(float(low_price))
         closes.append(close)
-
 
     recent_high = max(high_prices)
     recent_low = min(low_prices)
@@ -107,8 +114,8 @@ for symbol in stocks:
     print("-------------------------")
     print(f"LATEST DAY: {last_refresed}")
     print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
-    print(f"RECENT HIGH: {to_usd(float(recent_high))}")
-    print(f"RECENT LOW: {to_usd(float(recent_low))}")
+    print(f"52-WEEK HIGH: {to_usd(float(recent_high))}")
+    print(f"52-WEEK LOW: {to_usd(float(recent_low))}")
     print("-------------------------")
     print("RECOMMENDATION: " + recommendation)
     print("RECOMMENDATION REASON: " + reason)
@@ -117,27 +124,27 @@ for symbol in stocks:
     print("-------------------------")
 
     # csv stuff
-    file = "prices_" + symbol + ".csv"
-    filename = open(file, 'w+')
+    file = "data/prices_" + symbol + ".csv"
 
-    filename.write('timestamp, open, high, low, close, volume\n')
+    with open(file, 'w+') as csvfile:
+        csvfile.write('timestamp, open, high, low, close, volume\n')
 
-    for date in dates:
-        filename.write(date)
-        filename.write(", ")
-        filename.write(tsd[date]["1. open"])
-        filename.write(", ")
-        filename.write(tsd[date]["2. high"])
-        filename.write(", ")
-        filename.write(tsd[date]["3. low"])
-        filename.write(", ")
-        filename.write(tsd[date]["4. close"])
-        filename.write(", ")
-        filename.write(tsd[date]["5. volume"])
-        filename.write("\n")
+        for date in dates[0:52]:
+            csvfile.write(date)
+            csvfile.write(", ")
+            csvfile.write(wts[date]["1. open"])
+            csvfile.write(", ")
+            csvfile.write(wts[date]["2. high"])
+            csvfile.write(", ")
+            csvfile.write(wts[date]["3. low"])
+            csvfile.write(", ")
+            csvfile.write(wts[date]["4. close"])
+            csvfile.write(", ")
+            csvfile.write(wts[date]["5. volume"])
+            csvfile.write("\n")
 
-# plotly stuff
-# produces different graph in different window for each ticker symbol entered
+plotly stuff
+produces different graph in different window for each ticker symbol entered
     fig = go.Figure()
 
     # Create and style traces

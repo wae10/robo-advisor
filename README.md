@@ -13,3 +13,7 @@ From within the virtual environment, install the required packages specified in 
 ```sh
 pip install -r requirements.txt
 ```
+
+for plotly...
+pip install pandas
+pip install plotly
