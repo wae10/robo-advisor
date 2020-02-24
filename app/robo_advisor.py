@@ -3,7 +3,11 @@ import requests
 import json
 import os
 import csv # for prices.csv
+import datetime # for date and time 
 from dotenv import load_dotenv
+
+# date and time calculations
+now = datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p")
 
 load_dotenv() # load env
 
@@ -22,12 +26,8 @@ if len(symbol) != 4 or symbol.isnumeric():
 else:
 
     request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={API_KEY}"
-    print("URL:", request_url)
 
     response = requests.get(request_url)
-    print(type(response))
-    print(response.status_code)
-    print(type(response.text)) #> str
 
     parsed_response = json.loads(response.text)
 
@@ -53,16 +53,11 @@ else:
     recent_high = max(high_prices)
     recent_low = min(low_prices)
 
-    print("DATES: \n")
-    print(dates)
-
-    print("DICT:", parsed_response)
-
     print("-------------------------")
     print("SELECTED SYMBOL:",symbol)
     print("-------------------------")
     print("REQUESTING STOCK MARKET DATA...")
-    print("REQUEST AT: 2018-02-20 02:00pm")
+    print("REQUEST AT:", now)
     print("-------------------------")
     print(f"LATEST DAY: {last_refresed}")
     print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
