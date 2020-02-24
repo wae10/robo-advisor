@@ -53,6 +53,22 @@ else:
     recent_high = max(high_prices)
     recent_low = min(low_prices)
 
+    # for comparing latest close to recent 80% of recent high
+    HIGHthreshold = recent_high * (8/10)
+
+    # for comparing low
+    LOWthreshold = recent_low * 1.2
+
+    if eval(latest_close) < HIGHthreshold and eval(latest_close) > LOWthreshold:
+        recommendation = "HOLD"
+        reason = "STOCK IS LESS THAN 80% OF THE RECENT HIGH AND MORE THAN 120% OF THE RECENT LOW"
+    elif eval(latest_close) >= HIGHthreshold:
+        recommendation = "SELL!"
+        reason = "STOCK IS OVERVALUED BECAUSE IT IS GREATER THAN 80% OF THE RECENT HIGH" 
+    elif eval(latest_close) <= LOWthreshold:
+        recommendation = "BUY!"
+        reason = "STOCK IS UNDERVALUED BECAUSE IT IS WITHIN 120% OF THE RECENT LOW"
+
     print("-------------------------")
     print("SELECTED SYMBOL:",symbol)
     print("-------------------------")
@@ -64,8 +80,8 @@ else:
     print(f"RECENT HIGH: {to_usd(float(recent_high))}")
     print(f"RECENT LOW: {to_usd(float(recent_low))}")
     print("-------------------------")
-    print("RECOMMENDATION: BUY!")
-    print("RECOMMENDATION REASON: TODO")
+    print("RECOMMENDATION: " + recommendation)
+    print("RECOMMENDATION REASON: " + reason)
     print("-------------------------")
     print("HAPPY INVESTING!")
     print("-------------------------")
