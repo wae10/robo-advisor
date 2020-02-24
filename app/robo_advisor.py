@@ -6,6 +6,10 @@ import csv # for prices.csv
 import datetime # for date and time 
 from dotenv import load_dotenv
 
+import plotly #plotly graph
+import plotly.graph_objects as go #plotly graph, ADD TO README
+
+
 # date and time calculations
 now = datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p")
 
@@ -25,7 +29,10 @@ stocks = []
 
 stock_num = input("Welcome to the robo-advisor!\nHow many stocks would you like to test?")
 
-if num_there(stock_num):
+if eval(stock_num) == 0:
+    print("You must enter a number higher than 0. Please try again.")
+
+elif num_there(stock_num):
 
     if stock_num.isnumeric(): #still need to fix for input like ad34
         stock_num = eval(stock_num)
@@ -62,12 +69,16 @@ for symbol in stocks:
 
     high_prices = []
     low_prices = [] 
+    closes = []
 
     for date in dates:
         high_price = tsd[date]["2. high"]
         low_price = tsd[date]["3. low"]
+        close = tsd[date]["4. close"]
         high_prices.append(float(high_price))
         low_prices.append(float(low_price))
+        closes.append(close)
+
 
     recent_high = max(high_prices)
     recent_low = min(low_prices)
@@ -125,8 +136,18 @@ for symbol in stocks:
         filename.write(tsd[date]["5. volume"])
         filename.write("\n")
 
-        
+# plotly stuff
+# produces different graph in different window for each ticker symbol entered
+    fig = go.Figure()
 
+    # Create and style traces
+    fig.add_trace(go.Scatter(x=dates, y=closes, name=symbol, line = dict(color='firebrick', width=4, dash='dot')))
+        
+    # Edit the layout
+    fig.update_layout(title=symbol.upper() + ' Prices Over the Past 150 Days', xaxis_title='Day', yaxis_title='Price')
+
+
+    fig.show()
 
 
 
