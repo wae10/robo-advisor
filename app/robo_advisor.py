@@ -16,12 +16,14 @@ def to_usd(my_price):
 
 API_KEY = os.getenv("ALPHAVANTAGE_API_KEY", default="OOPS")
 
-symbol = input("Welcome to the robo-advisor\nPlease enter your desired stock symbol: \n")
+symbol = input("Welcome to the robo-advisor!\nPlease enter your desired stock symbol: \n")
 
-symbol = symbol.upper()
+# function for symbol inputs like this: 'ad42'
+def num_there(s):
+    return any(i.isdigit() for i in s)
 
-if len(symbol) != 4 or symbol.isnumeric():
-    print("THIS IS WRONG")
+if len(symbol) > 5 or num_there(symbol):
+    print("Invalid symbol. Please try again.")
 
 else:
 
@@ -104,10 +106,6 @@ else:
         filename.write(", ")
         filename.write(tsd[date]["5. volume"])
         filename.write("\n")
-
-    #filename.write(parsed_response["Meta Data"]["Time Series (Daily)"])
-
-    #filename.write(parsed_response["Meta Data"]["3. Last Refreshed"])
 
     
 
