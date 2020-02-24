@@ -2,6 +2,7 @@
 import requests
 import json
 import os
+import csv # for prices.csv
 from dotenv import load_dotenv
 
 load_dotenv() # load env
@@ -16,7 +17,7 @@ symbol = input("Welcome to the robo-advisor\nPlease enter your desired stock sym
 symbol = symbol.upper()
 
 if len(symbol) != 4 or symbol.isnumeric():
-    print("THIS IS WRONG YOU FUCKER")
+    print("THIS IS WRONG")
 
 else:
 
@@ -52,6 +53,9 @@ else:
     recent_high = max(high_prices)
     recent_low = min(low_prices)
 
+    print("DATES: \n")
+    print(dates)
+
     print("DICT:", parsed_response)
 
     print("-------------------------")
@@ -71,7 +75,30 @@ else:
     print("HAPPY INVESTING!")
     print("-------------------------")
 
+    # csv stuff
+    filename = open("prices.csv", 'w+')
 
+    filename.write('timestamp, open, high, low, close, volume\n')
+
+    for date in dates:
+        filename.write(date)
+        filename.write(", ")
+        filename.write(tsd[date]["1. open"])
+        filename.write(", ")
+        filename.write(tsd[date]["2. high"])
+        filename.write(", ")
+        filename.write(tsd[date]["3. low"])
+        filename.write(", ")
+        filename.write(tsd[date]["4. close"])
+        filename.write(", ")
+        filename.write(tsd[date]["5. volume"])
+        filename.write("\n")
+
+    #filename.write(parsed_response["Meta Data"]["Time Series (Daily)"])
+
+    #filename.write(parsed_response["Meta Data"]["3. Last Refreshed"])
+
+    
 
 
 
