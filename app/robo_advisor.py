@@ -30,7 +30,7 @@ API_KEY = os.getenv("ALPHAVANTAGE_API_KEY", default="OOPS")
 # empty list for multiple stocks
 stocks = []
 
-stock_num = input("\nWelcome to the robo-advisor!\n\nHow many stocks would you like to evaluate?\n\n***> Disclaimer: you may only enter 5 stocks per request <***")
+stock_num = input("\nWelcome to the robo-advisor!\n\nHow many stocks would you like to evaluate?\n\n***> Disclaimer: you may only enter 5 stocks per request <***\n\nEnter Number Here: ")
 
 
 
@@ -51,7 +51,6 @@ elif num_there(stock_num):
                     print("Invalid symbol. Input will be discarded.")
                 else:
                     stocks.append(symbol)
-            print(stocks)
     else:
         print("Invalid symbol. Restarting program...")
 
