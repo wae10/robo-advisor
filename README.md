@@ -14,14 +14,7 @@ From within the virtual environment, install the required packages specified in 
 pip install -r requirements.txt
 ```
 
-for plotly...
-pip install pandas
-pip install plotly
-
-for SMS Sending...
-pip install twilio
-
-Setup...
+Twilio Setup...
 
 For SMS capabilities, sign up for a Twilio account, click the link in a confirmation email to verify your account, then confirm a code sent to your phone to enable 2FA.
 
