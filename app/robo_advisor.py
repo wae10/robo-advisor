@@ -6,6 +6,7 @@ import json
 import os
 import csv # for prices.csv
 import datetime # for date and time 
+from twilio.rest import Client # twilio stuff
 from dotenv import load_dotenv
 
 import plotly #plotly graph
@@ -75,6 +76,10 @@ for symbol in stocks:
 
     latest_close = wts[latest_day]["4. close"]
 
+    second_latest_week = dates[1]
+
+    second_latest_close = wts[second_latest_week]["4. close"]
+
     high_prices = []
     low_prices = [] 
     closes = []
@@ -143,20 +148,43 @@ for symbol in stocks:
             csvfile.write(wts[date]["5. volume"])
             csvfile.write("\n")
 
-plotly stuff
-produces different graph in different window for each ticker symbol entered
+    TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "OOPS, please specify env var called 'TWILIO_ACCOUNT_SID'")
+    TWILIO_AUTH_TOKEN  = os.environ.get("TWILIO_AUTH_TOKEN", "OOPS, please specify env var called 'TWILIO_AUTH_TOKEN'")
+    SENDER_SMS  = os.environ.get("SENDER_SMS", "OOPS, please specify env var called 'SENDER_SMS'")
+    RECIPIENT_SMS  = os.environ.get("RECIPIENT_SMS", "OOPS, please specify env var called 'RECIPIENT_SMS'")
+
+
+
+    # OUTPUT FOR USER'S SMS
+    price_increase = (eval(second_latest_close) * 1.05)
+    price_decrease = (eval(second_latest_close) * .95)
+
+    # COMPILE REQUEST PARAMETERS (PREPARE THE MESSAGE)
+    if eval(latest_close) >= price_increase:
+        content = "Wow! The latest closing price for " + symbol.upper() + " has spiked 5% or more since the last closing week!"
+    elif eval(latest_close) <= price_decrease:
+        content = "Uh oh, the latest closing price for " + symbol.upper() + " has dropped 5% or more since the last closing week!"
+    else:
+        content = "The price for " + symbol.upper() + " has been steady since the past closing week, maintaining no more than 5% growth or decline since."
+
+    # AUTHENTICATE
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+    # ISSUE REQUEST (SEND SMS)
+    message = client.messages.create(to=RECIPIENT_SMS, from_=SENDER_SMS, body=content)
+
+    # plotly stuff
+    # produces different graph in different window for each ticker symbol entered
     fig = go.Figure()
 
     # Create and style traces
     fig.add_trace(go.Scatter(x=dates, y=closes, name=symbol, line = dict(color='firebrick', width=4, dash='dot')))
         
     # Edit the layout
-    fig.update_layout(title=symbol.upper() + ' Prices Over the Past 150 Days', xaxis_title='Day', yaxis_title='Price')
+    fig.update_layout(title=symbol.upper() + ' Prices Over the Past 52 Weeks', xaxis_title='Time', yaxis_title='Price')
 
 
     fig.show()
-
-
 
 
 
