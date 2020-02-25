@@ -1,6 +1,18 @@
 # Robo-Advisor Project
 
-## Basic Requirements
+## Overview
+
+This application pulls historical stock price data from the internet and issues a Buy/Sell Recomendation based on its algorithm. Furthermore, it writes the historical data to a CSV File and creates a chart of the stock price throughout the past year. Additionally, if there are large movements in the user's selected stock(s) within the past week, the program sends an SMS Alert about such movement.
+
+## Setup
+
+### Installation
+
+Fork this repo, then clone your fork to download it locally onto your computer. Then navigate there from the command line.
+
+```sh
+cd ~/Documents/OPIM-243/GitHub/robo-advisor
+```
 
 ### Environment Setup
 
@@ -32,3 +44,11 @@ Then [create a new project](https://www.twilio.com/console/projects/create) with
 You'll also need to [obtain a Twilio phone number](https://www.twilio.com/console/sms/getting-started/build) to send the messages from. After doing so, update the contents of the ".env" file to specify this value (including the plus sign at the beginning) in the environment variable called `SENDER_SMS`.
 
 Finally, specify the recipient's phone number in the environment variable called `RECIPIENT_SMS` to specify the recipient's phone number (including the plus sign at the beginning).
+
+## Usage
+
+Congratulations! You are now ready to run the Robo-Advisor Program! To run, just enter the following into your command line from whichever directory in which your code is located.
+
+```sh
+python robo_advisor.py
+```
