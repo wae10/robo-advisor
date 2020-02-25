@@ -1,4 +1,7 @@
 # Robo-Advisor Project
+
+## Basic Requirements
+
 ### Environment Setup
 
 Create and activate a new Anaconda virtual environment:
@@ -14,6 +17,12 @@ From within the virtual environment, install the required packages specified in 
 pip install -r requirements.txt
 ```
 
+### API Requirements and Security
+
+You will need a personalized API Key to issue requests to the [AlphaVantage API](https://www.alphavantage.co) so that the program can retrieve stock data. But the program's source code will not include the secret API Key value. Instead, you should include your API Key in a variable called `ALPHAVANTAGE_API_KEY` in the .env directory, and the program will read the API Key from this environment variable at run-time. 
+
+Since .env files will be included in the .gitignore directory, your API key will be kept secret.
+
 ### Twilio Setup
 
 For SMS capabilities, [sign up for a Twilio account](https://www.twilio.com/try-twilio), click the link in a confirmation email to verify your account, then confirm a code sent to your phone to enable 2FA.
@@ -23,4 +32,3 @@ Then [create a new project](https://www.twilio.com/console/projects/create) with
 You'll also need to [obtain a Twilio phone number](https://www.twilio.com/console/sms/getting-started/build) to send the messages from. After doing so, update the contents of the ".env" file to specify this value (including the plus sign at the beginning) in the environment variable called `SENDER_SMS`.
 
 Finally, specify the recipient's phone number in the environment variable called `RECIPIENT_SMS` to specify the recipient's phone number (including the plus sign at the beginning).
-
