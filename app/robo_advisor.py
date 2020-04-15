@@ -40,6 +40,20 @@ def transform_response(parsed_response):
 
     return rows
 
+def write_to_csv(rows, csv_filepath):
+    # rows should be a list of dictionaries
+    # csv_filepath should be a string filepath pointing to where the data should be written
+
+    csv_headers = ["timestamp", "open", "high", "low", "close", "volume"]
+
+    with open(csv_filepath, "w") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=csv_headers)
+        writer.writeheader() # uses fieldnames set above
+        for row in rows:
+            writer.writerow(row)
+
+    return True
+
 def to_usd(my_price):
     """Converts number into US Dollar format"""
     return "${0:,.2f}".format(my_price)

@@ -1,6 +1,7 @@
 # robo-advisor/my_test.py
 
-from app.robo_advisor import to_usd, num_there, get_response, transform_response
+from app.robo_advisor import to_usd, num_there, get_response, transform_response, write_to_csv
+import os, csv
 
 def test_to_usd():
     result = to_usd(3.50)
@@ -20,3 +21,12 @@ def test_transform_response():
     parsed_response = get_response("tsla", "BCV3KUW4GBOD7DTL")
     result = transform_response(parsed_response)
     assert type(result) is list and 'open' in result[0]
+
+def test_write_to_csv():
+    rows = transform_response(get_response("tsla", "BCV3KUW4GBOD7DTL"))
+
+    csv_file_path = os.path.join("/Users/williameverett/Desktop/Georgetown-University/Spring-2020/OPIM-243/robo-advisor/app/data/prices.csv")
+
+    result = write_to_csv(rows, csv_file_path)
+    
+    assert result == True
