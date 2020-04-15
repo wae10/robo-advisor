@@ -13,11 +13,27 @@ import plotly #plotly graph
 import plotly.graph_objects as go #plotly graph, ADD TO README
 
 
+API_KEY = os.getenv("ALPHAVANTAGE_API_KEY", default="OOPS")
+
+def get_response(symbol, API_KEY):
+    """Returns parsed response from requested stock symbol"""
+    request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={API_KEY}"
+    response = requests.get(request_url)
+    parsed_response = json.loads(response.text)
+    return parsed_response
+
+# def transform_response(parsed_response):
+#     # parsed_response should be a dictionary representing the original JSON response
+#     # it should have keys: "Meta Data" and "Time Series Daily"
+#     tsd = parsed_response["Time Series (Daily)"]
+
 def to_usd(my_price):
+    """Converts number into US Dollar format"""
     return "${0:,.2f}".format(my_price)
 
 # function for symbol inputs like this: 'ad42'
 def num_there(s):
+    """Returns True if there is a number in the string parameter"""
     return any(i.isdigit() for i in s)
 
 # needed to remove from global scopep
@@ -26,8 +42,6 @@ if __name__ == "__main__":
     now = datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p")
 
     load_dotenv() # load env
-
-    API_KEY = os.getenv("ALPHAVANTAGE_API_KEY", default="OOPS")
 
     # empty list for multiple stocks
     stocks = []
