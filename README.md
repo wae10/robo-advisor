@@ -52,3 +52,33 @@ Congratulations! You are now ready to run the Robo-Advisor Program! To run, just
 ```sh
 python robo_advisor.py
 ```
+
+create .travis.yml file in root directory with these contents:
+
+## CI Status Badge
+[![Build Status](https://travis-ci.com/wae10/shopping-cart.svg?branch=cleanup)](https://travis-ci.com/wae10/shopping-cart)
+
+pip install pytest
+
+create test folder, my_test.py
+
+create conftest.py file for pytest
+
+run: pytest
+
+dist: xenial
+language: python
+python:
+  - "3.7"
+install:
+  - pip install pytest
+script:
+  - pytest
+
+optional:
+
+    pip install coverage
+
+    coverage run shopping_cart.py
+
+    coverage report
