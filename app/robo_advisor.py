@@ -22,10 +22,23 @@ def get_response(symbol, API_KEY):
     parsed_response = json.loads(response.text)
     return parsed_response
 
-# def transform_response(parsed_response):
-#     # parsed_response should be a dictionary representing the original JSON response
-#     # it should have keys: "Meta Data" and "Time Series Daily"
-#     tsd = parsed_response["Time Series (Daily)"]
+def transform_response(parsed_response):
+    """Returns TSD data of the parsed response"""
+    tsd = parsed_response["Time Series (Daily)"]
+
+    rows = []
+    for date, daily_prices in tsd.items():
+        row = {
+            "timestamp": date,
+            "open": float(daily_prices["1. open"]),
+            "high": float(daily_prices["2. high"]),
+            "low": float(daily_prices["3. low"]),
+            "close": float(daily_prices["4. close"]),
+            "volume": int(daily_prices["5. volume"])
+        }
+        rows.append(row)
+
+    return rows
 
 def to_usd(my_price):
     """Converts number into US Dollar format"""
