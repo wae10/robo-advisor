@@ -1,5 +1,8 @@
 # Robo-Advisor Project
 
+## CI Status Badge
+[![Build Status](https://travis-ci.com/wae10/robo-advisor.svg?branch=cleanup)](https://travis-ci.com/wae10/shopping-cart)
+
 ## Overview
 
 This application pulls historical stock price data from the internet and issues a Buy/Sell Recomendation based on its algorithm. Furthermore, it writes the historical data to a CSV File and creates a chart of the stock price throughout the past year. Additionally, if there are large movements in the user's selected stock(s) within the past week, the program sends an SMS Alert about such movement.
@@ -45,6 +48,17 @@ You'll also need to [obtain a Twilio phone number](https://www.twilio.com/consol
 
 Finally, specify the recipient's phone number in the environment variable called `RECIPIENT_SMS` to specify the recipient's phone number (including the plus sign at the beginning).
 
+### Optional
+
+For code quality checks:
+
+    pip install coverage
+
+    coverage run shopping_cart.py
+
+    coverage report
+
+
 ## Usage
 
 Congratulations! You are now ready to run the Robo-Advisor Program! To run, just enter the following into your command line from whichever directory in which your code is located.
@@ -53,7 +67,9 @@ Congratulations! You are now ready to run the Robo-Advisor Program! To run, just
 python robo_advisor.py
 ```
 
-create .travis.yml file in root directory with these contents:
+## Other Various Cleanup Branch Additions
+
+### Create .travis.yml file in root directory with these contents:
 
     dist: xenial
     language: python
@@ -64,21 +80,10 @@ create .travis.yml file in root directory with these contents:
     script:
     - pytest
 
-## CI Status Badge
-[![Build Status](https://travis-ci.com/wae10/robo-advisor.svg?branch=cleanup)](https://travis-ci.com/wae10/shopping-cart)
-
 pip install pytest
 
-create test folder, my_test.py
+create test folder, my_test.py in test folder
 
 create conftest.py file for pytest
 
-run: pytest
-
-optional:
-
-    pip install coverage
-
-    coverage run shopping_cart.py
-
-    coverage report
+To run: pytest
