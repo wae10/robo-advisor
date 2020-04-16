@@ -34,7 +34,7 @@ def test_write_to_csv():
 
     rows = transform_response(get_response(symbol, API_KEY, request_url))
 
-    csv_file_path = os.path.join("/Users/williameverett/Desktop/Georgetown-University/Spring-2020/OPIM-243/robo-advisor/app/data/prices.csv")
+    csv_file_path = os.path.join(os.getcwd(), "app", "data", "prices.csv")
 
     result = write_to_csv(rows, csv_file_path)
     
