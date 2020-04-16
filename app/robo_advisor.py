@@ -15,9 +15,8 @@ import plotly.graph_objects as go #plotly graph, ADD TO README
 
 API_KEY = os.getenv("ALPHAVANTAGE_API_KEY", default="OOPS")
 
-def get_response(symbol, API_KEY):
+def get_response(symbol, API_KEY, request_url):
     """Returns parsed response from requested stock symbol"""
-    request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={API_KEY}"
     response = requests.get(request_url)
     parsed_response = json.loads(response.text)
     return parsed_response
@@ -41,6 +40,7 @@ def transform_response(parsed_response):
     return rows
 
 def write_to_csv(rows, csv_filepath):
+    """Returns true if able to write rows of tsd data is a csv file"""
     # rows should be a list of dictionaries
     # csv_filepath should be a string filepath pointing to where the data should be written
 
@@ -53,6 +53,24 @@ def write_to_csv(rows, csv_filepath):
             writer.writerow(row)
 
     return True
+
+def recommendation(latest_close):
+    """Returns list of stock recommendation and reason based on latest close price"""
+    if eval(latest_close) < HIGHthreshold and eval(latest_close) > LOWthreshold:
+        recommendation = "HOLD"
+        reason = "STOCK IS LESS THAN 80% OF THE RECENT HIGH AND MORE THAN 120% OF THE RECENT LOW"
+    elif eval(latest_close) >= HIGHthreshold:
+        recommendation = "SELL!"
+        reason = "STOCK IS OVERVALUED BECAUSE IT IS GREATER THAN 80% OF THE RECENT HIGH" 
+    elif eval(latest_close) <= LOWthreshold:
+        recommendation = "BUY!"
+        reason = "STOCK IS UNDERVALUED BECAUSE IT IS WITHIN 120% OF THE RECENT LOW"
+
+    result = []
+    result.append(recommendation)
+    result.append(reason)
+
+    return result
 
 def to_usd(my_price):
     """Converts number into US Dollar format"""
@@ -104,9 +122,7 @@ if __name__ == "__main__":
 
         request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol={symbol}&apikey={API_KEY}" # change to weekly
 
-        response = requests.get(request_url)
-
-        parsed_response = json.loads(response.text)
+        parsed_response = get_response(symbol, API_KEY, request_url)
 
         last_refresed = parsed_response["Meta Data"]["3. Last Refreshed"]
 
@@ -143,15 +159,8 @@ if __name__ == "__main__":
         # for comparing low
         LOWthreshold = recent_low * 1.2
 
-        if eval(latest_close) < HIGHthreshold and eval(latest_close) > LOWthreshold:
-            recommendation = "HOLD"
-            reason = "STOCK IS LESS THAN 80% OF THE RECENT HIGH AND MORE THAN 120% OF THE RECENT LOW"
-        elif eval(latest_close) >= HIGHthreshold:
-            recommendation = "SELL!"
-            reason = "STOCK IS OVERVALUED BECAUSE IT IS GREATER THAN 80% OF THE RECENT HIGH" 
-        elif eval(latest_close) <= LOWthreshold:
-            recommendation = "BUY!"
-            reason = "STOCK IS UNDERVALUED BECAUSE IT IS WITHIN 120% OF THE RECENT LOW"
+
+        recommendation = recommendation(latest_close)
 
         print("-------------------------")
         print("SELECTED SYMBOL:",symbol)
@@ -164,8 +173,8 @@ if __name__ == "__main__":
         print(f"52-WEEK HIGH: {to_usd(float(recent_high))}")
         print(f"52-WEEK LOW: {to_usd(float(recent_low))}")
         print("-------------------------")
-        print("RECOMMENDATION: " + recommendation)
-        print("RECOMMENDATION REASON: " + reason)
+        print("RECOMMENDATION: " + recommendation[0])
+        print("RECOMMENDATION REASON: " + recommendation[1])
         print("-------------------------")
         print("HAPPY INVESTING!")
         print("-------------------------")
