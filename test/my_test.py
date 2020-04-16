@@ -1,7 +1,6 @@
 # robo-advisor/my_test.py
 
-from app.robo_advisor import to_usd, num_there, get_response, transform_response, write_to_csv
-import os, requests
+from app.robo_advisor import to_usd, num_there, get_response, transform_response, write_to_csv, requests, os
 
 def test_to_usd():
     result = to_usd(3.50)
